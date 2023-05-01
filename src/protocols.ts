@@ -1,4 +1,4 @@
-import { Payment, Room, Ticket } from '@prisma/client';
+import { Booking, Payment, Room, Ticket } from '@prisma/client';
 
 export type ApplicationError = {
   name: string;
@@ -54,3 +54,5 @@ export type infoBooking = {
 export type bodyANewBooking = {
   roomId: number;
 };
+
+export type BookingWithRoom = Booking & { Room: Room };

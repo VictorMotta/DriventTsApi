@@ -15,8 +15,9 @@ export async function getUserBooking(req: AuthenticatedRequest, res: Response, n
 
 export async function postANewBooking(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const userId = req.userId;
+  const roomId = req.body.roomId as number;
   try {
-    const bookingId = await bookingsServices.postANewBooking(userId);
+    const bookingId = await bookingsServices.postANewBooking(userId, roomId);
     res.send({ bookingId });
   } catch (err) {
     next(err);
