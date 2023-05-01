@@ -19,14 +19,14 @@ async function postANewBooking(userId: number, roomId: number) {
   if (!enrollment) throw notFoundError();
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
-  if (!ticket || ticket.TicketType.isRemote || ticket.status === 'PAID' || !ticket.TicketType.includesHotel)
+  if (!ticket || ticket.TicketType.isRemote || ticket.status === 'RESERVED' || !ticket.TicketType.includesHotel)
     throw forbidden();
 
-  const freeRoom = bookingRepository.getBookingByRoomId(roomId);
-  if (freeRoom) throw forbidden();
-
-  const roomExist = roomRepository.getRoomById(roomId);
+  const roomExist = await roomRepository.getRoomById(roomId);
   if (!roomExist) throw notFoundError();
+
+  const freeRoom = await bookingRepository.getBookingByRoomId(roomId);
+  if (freeRoom) throw forbidden();
 
   const booking = await bookingRepository.postANewBooking({ userId, roomId });
 

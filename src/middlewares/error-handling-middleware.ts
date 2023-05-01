@@ -38,6 +38,12 @@ export function handleApplicationErrors(
     });
   }
 
+  if (err.name === 'Forbidden') {
+    return res.status(httpStatus.FORBIDDEN).send({
+      message: err.message,
+    });
+  }
+
   if (err.name === 'CannotListHotelsError') {
     return res.status(httpStatus.NOT_FOUND).send({
       message: err.message,
