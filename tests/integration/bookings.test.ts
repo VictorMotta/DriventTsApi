@@ -265,9 +265,6 @@ describe('PUT /booking/:bookingId', () => {
     it('should respond with status 200 and return id of booking if booking is ok', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
-      const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketTypeWithHotel();
-      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       const booking = await createABookingValid(user);
       const roomId = await createARoomValid();
 

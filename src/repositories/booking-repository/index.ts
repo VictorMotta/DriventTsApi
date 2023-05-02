@@ -1,6 +1,6 @@
+import { Booking } from '@prisma/client';
 import { prisma } from '@/config';
-import { BookingWithRoom, infoBooking } from '@/protocols';
-import { Booking, Room } from '@prisma/client';
+import { BookingWithRoom, PartialBookingsParam, infoBooking } from '@/protocols';
 
 async function getUserBooking(userId: number): Promise<infoBooking> {
   return await prisma.booking.findFirst({
@@ -39,7 +39,37 @@ async function postANewBooking({ userId, roomId }: paramsNewBooking): Promise<Bo
   });
 }
 
-const bookingRepository = { getUserBooking, getBookingByRoomId, postANewBooking };
+async function getBookingByIdAndVerifyIfUserId({ userId, bookingId }: PartialBookingsParam): Promise<Booking> {
+  return await prisma.booking.findFirst({
+    where: {
+      AND: [
+        {
+          id: bookingId,
+        },
+        { userId },
+      ],
+    },
+  });
+}
+
+async function updateRoomOfBooking({ bookingId, roomId }: PartialBookingsParam): Promise<Booking> {
+  return await prisma.booking.update({
+    where: {
+      id: bookingId,
+    },
+    data: {
+      roomId,
+    },
+  });
+}
+
+const bookingRepository = {
+  getUserBooking,
+  getBookingByRoomId,
+  postANewBooking,
+  getBookingByIdAndVerifyIfUserId,
+  updateRoomOfBooking,
+};
 
 export default bookingRepository;
 

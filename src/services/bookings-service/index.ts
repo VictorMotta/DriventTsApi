@@ -1,6 +1,6 @@
 import { notFoundError } from '@/errors';
 import { forbidden } from '@/errors/forbidden-error';
-import { infoBooking } from '@/protocols';
+import { ParamsBookings, infoBooking } from '@/protocols';
 import bookingRepository from '@/repositories/booking-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import roomRepository from '@/repositories/room-repository';
@@ -33,6 +33,22 @@ async function postANewBooking(userId: number, roomId: number) {
   return booking.id;
 }
 
-const bookingsServices = { getUserBooking, postANewBooking };
+async function updateRoomOfBooking({ userId, roomId, bookingId }: ParamsBookings) {
+  const bookingExist = await bookingRepository.getBookingByIdAndVerifyIfUserId({ userId, bookingId });
+  if (!bookingExist) throw forbidden();
+
+  const roomExist = await roomRepository.getRoomById(roomId);
+  if (!roomExist) throw notFoundError();
+
+  const freeRoom = await bookingRepository.getBookingByRoomId(roomId);
+  console.log(freeRoom);
+  if (freeRoom) throw forbidden();
+
+  const { id: incomingBookingId } = await bookingRepository.updateRoomOfBooking({ bookingId, roomId });
+
+  return incomingBookingId;
+}
+
+const bookingsServices = { getUserBooking, postANewBooking, updateRoomOfBooking };
 
 export default bookingsServices;

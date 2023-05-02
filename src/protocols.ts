@@ -54,5 +54,11 @@ export type infoBooking = {
 export type bodyANewBooking = {
   roomId: number;
 };
+export type paramAUpdateBooking = {
+  bookingId: number;
+};
 
 export type BookingWithRoom = Booking & { Room: Room };
+
+export type ParamsBookings = { userId: number; roomId: number; bookingId: number };
+export type PartialBookingsParam = Partial<ParamsBookings>;
