@@ -41,7 +41,6 @@ async function updateRoomOfBooking({ userId, roomId, bookingId }: ParamsBookings
   if (!roomExist) throw notFoundError();
 
   const freeRoom = await bookingRepository.getBookingByRoomId(roomId);
-  console.log(freeRoom);
   if (freeRoom) throw forbidden();
 
   const { id: incomingBookingId } = await bookingRepository.updateRoomOfBooking({ bookingId, roomId });
